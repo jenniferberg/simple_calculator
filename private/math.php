@@ -1,15 +1,15 @@
 <?php
 
 class Math{
-	
-	public  $integers = ['0','1','2','3','4','5','6','7','8','9'];
-	public  $symbols = ['/','*','-','+'];
-	public  $special = ['+/-','%'];
-	
+
+	public static $integers = ['0','1','2','3','4','5','6','7','8','9'];
+	public static $symbols = ['/','*','-','+'];
+	public static $special = ['+/-','%'];
+
 	public function percent($value){
 		return $value * 0.01;
 	}
-	
+
 	public function arithmetic($a, $b, $symbol){
 		switch($symbol){
 			case '*':
@@ -28,7 +28,7 @@ class Math{
 				break;
 		}
 	}
-	
+
 	public function negative($value){
 		return $value * (-1);
 	}

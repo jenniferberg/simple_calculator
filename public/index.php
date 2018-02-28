@@ -2,6 +2,8 @@
 require_once('../private/session.php');
 require_once('../private/calculate.php');
 
+print_r($_SESSION);
+
 /*Define starting values
   $answer = 0 : starting answer is set to 0
   $submit = 'false':  form has not been submitted.
@@ -17,10 +19,10 @@ if($_SERVER['REQUEST_METHOD'] == 'GET'){
 
 //If the server request is a POST
 if($_SERVER['REQUEST_METHOD'] == 'POST'){
-	
+
 	//If the user selected the "=" button
 	if(isset($_POST['submit'])){
-		
+
 		//Define array $all_values equal to SESSION array.
 		//This array holds the inputed values
 		$all_values = $_SESSION['all_values'];
@@ -28,57 +30,55 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
 		if(isset($all_values)){
 			//If the array has reached its maximum of 3 items
 			if(count($all_values) == 3){
-				
+
 				//Instantiate a new Calculate object and calculate the answer
 				$calc = new Calculate();
 				$answer = $calc->answer($all_values[0], $all_values[1], $all_values[2]);
-				
+
 				//Reset the array and the counter
 				$all_values = [];
 				$i = 0;
-				
+
 				//If the result is not an error, reset the first value of the
 				//array to the new answer, and reset the counter to 1
 				if($answer !== 'Error'){
 					$all_values[0] = $answer;
 					$i = 1;
 				}
-				
+
 				//The form has been submitted, thus $submit = true
 				$submit = 'true';
-				
+
 				//Reset the SESSION variables to the new values
 				$_SESSION['all_values'] = $all_values;
 				$_SESSION['i'] = $i;
 				$_SESSION['submit'] = $submit;
-				
+
 			}
-			
+
 			//If the array has not reached its maximum of 3 items, but if
 			//at least the first item is set
 			elseif(isset($all_values[0])){
 				//Set the answer to the first item of the array
 				$answer = $all_values[0];
-				
+
 				//Reset the array. Set the first value of the
 				//array to the new answer, and reset the counter to 1
 				$all_values = [];
 				$all_values[0] = $answer;
 				$i = 1;
-				
+
 				//The form has been submitted, thus $submit = true
 				$submit = 'true';
-				
+
 				//Reset the SESSION variables to the new values
-				$_SESSION['all_values'] = $all_values;
-				$_SESSION['i'] = $i;
-				$_SESSION['submit'] = $submit;
-				
-				
+				$session->set_session($submit, $i, $all_values);
+
+
 			}else{
 				$answer = 0;
 			}
-			
+
 		}
 	}
 	//If the user selected the "AC" button, unset the SESSION values
@@ -89,8 +89,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
 
 //If the SESSION values have not been set, set them
 if(!isset($_SESSION['all_values']) && !isset($_SESSION['i'])){
-	$_SESSION['all_values'] = [];
-	$_SESSION['i'] = 0;
+	$session->set_default_session();
 }
 ?>
 
@@ -153,7 +152,7 @@ if(!isset($_SESSION['all_values']) && !isset($_SESSION['i'])){
 function getValue(obj){
 	var id = obj.id;
 	var value = document.getElementById(id).value;
-	
+
 	//Replace any '+' values, as these will break in the GET request
 	if(value == '+'){
 		value = 'add';
@@ -161,9 +160,9 @@ function getValue(obj){
 	if(value == '+/-'){
 		value = 'neg';
 	}
-	
+
 	vars = "value="+value;
-	
+
 	getResponse(vars);
 }
 
