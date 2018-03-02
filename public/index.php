@@ -2,8 +2,6 @@
 require_once('../private/session.php');
 require_once('../private/calculate.php');
 
-print_r($_SESSION);
-
 /*Define starting values
   $answer = 0 : starting answer is set to 0
   $submit = 'false':  form has not been submitted.
